@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <a href="/" class="logo">SoftUni IMDB</a>
+      <a href="/" class="logo">Vue-Store</a>
       <div class="header-right">
         <span>
           <a href="/movie/create">Create</a>
@@ -13,7 +13,13 @@
       </div>
     </header>
     <slot></slot>
-    <footer><h4>SoftUni 2020</h4></footer>
+    <div class="footer">
+      <div class="shell">
+        <p class="lf">
+          Copyright &copy; 2020 <a href="#">Vue-Store</a> - All Rights Reserved
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -25,13 +31,12 @@ export default {};
 /* Header CSS */
 header {
   overflow: hidden;
-  background-color: #f1f1f1;
   padding: 0 50px;
 }
 
 header a {
   float: left;
-  color: black;
+  color: rgb(224, 165, 109);
   text-align: center;
   padding: 18px;
   text-decoration: none;
@@ -46,12 +51,21 @@ header a.logo {
 }
 
 header a:hover {
-  background-color: dodgerblue;
+  background-color: white;
+  opacity: 10%;
   color: white;
 }
 
 header .header-right {
   float: right;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20;
 }
 
 @media screen and (max-width: 500px) {

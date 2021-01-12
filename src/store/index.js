@@ -5,6 +5,9 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    counter: 0,
+    accessToken: localStorage.getItem("access-token") || "",
+    currentUser: {},
   },
+  mutations: {},
+  actions: {},
 });

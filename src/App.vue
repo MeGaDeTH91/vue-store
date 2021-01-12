@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="back-image">
     <page-layout>
       <router-view/>
     </page-layout>
@@ -17,12 +17,20 @@ export default {
 </script>
 
 <style>
+.back-image {
+  /* The image used */
+  background: url("assets/background.png") no-repeat center fixed;
+  background-size: cover;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
