@@ -16,9 +16,9 @@ export default {
   },
   methods: {
     async loadData() {
-      const response = await fetch("http://localhost:8000/api/movies/all");
+      // const response = await fetch("http://localhost:8000/api/movies/all");
 
-      this.movies = await response.json();
+      // this.movies = await response.json();
       console.log(this.movies);
     },
   },

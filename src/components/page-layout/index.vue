@@ -1,14 +1,11 @@
 <template>
   <div>
     <header>
-      <a href="/" class="logo">Vue-Store</a>
+      <span><router-link class="nav-link logo" to="/">Vue-Store</router-link></span>
       <div class="header-right">
-        <span>
-          <a href="/movie/create">Create</a>
-          <a href="#">Welcome testuser!</a>
-          <a href="#">Logout</a>
-          <!-- <a href="/register">Register</a>
-              <a href="/login">Login</a> -->
+        <span v-for="(route, index) in this.getRoutes"
+            :key="index">
+            <span><router-link class="nav-link" :to="route.link">{{route.title}}</router-link></span>
         </span>
       </div>
     </header>
@@ -16,7 +13,7 @@
     <div class="footer">
       <div class="shell">
         <p class="lf">
-          Copyright &copy; 2020 <a href="#">Vue-Store</a> - All Rights Reserved
+          Copyright &copy; 2020 Vue-Store - All Rights Reserved
         </p>
       </div>
     </div>
@@ -24,7 +21,23 @@
 </template>
 
 <script>
-export default {};
+import getNavigationRoutes from "@/utils/routes.js";
+export default {
+  name: "PageLayout",
+  computed: {
+    getRoutes() {
+      return getNavigationRoutes();
+    },
+  },
+  data() {
+    return {
+      
+    };
+  },
+  created() {
+    this.navigationRoutes = getNavigationRoutes;
+  },
+};
 </script>
 
 <style>
@@ -36,7 +49,7 @@ header {
 
 header a {
   float: left;
-  color: rgb(224, 165, 109);
+  color: #ffb9b9;
   text-align: center;
   padding: 18px;
   text-decoration: none;
@@ -51,13 +64,22 @@ header a.logo {
 }
 
 header a:hover {
-  background-color: white;
+  background-color: rgb(255, 236, 225);
   opacity: 10%;
-  color: white;
 }
 
 header .header-right {
   float: right;
+}
+
+.nav-link {
+  color: #ffb9b9;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.nav-link:hover {
+  color: rgb(255, 123, 0) !important;
+  opacity: 50%;
 }
 
 .footer {
@@ -66,6 +88,7 @@ header .header-right {
   right: 0;
   bottom: 0;
   height: 20;
+  color: rgb(252, 194, 141);
 }
 
 @media screen and (max-width: 500px) {
