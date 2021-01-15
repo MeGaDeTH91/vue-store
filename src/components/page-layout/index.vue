@@ -73,12 +73,12 @@ header .header-right {
 }
 
 .nav-link {
-  color: #ffb9b9;
+  color: #ffa78c;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .nav-link:hover {
-  color: rgb(255, 123, 0) !important;
+  color: rgb(255, 104, 104);
   opacity: 50%;
 }
 
@@ -88,7 +88,7 @@ header .header-right {
   right: 0;
   bottom: 0;
   height: 20;
-  color: rgb(252, 194, 141);
+  color:rgb(255, 155, 155);
 }
 
 @media screen and (max-width: 500px) {
