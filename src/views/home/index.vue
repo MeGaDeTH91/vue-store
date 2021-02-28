@@ -6,8 +6,6 @@
           <div class="thumbnail" onClick="{onDetails}">
             <img :src="product.imageURL" alt="Card image cap"/>
           </div>
-          <br />
-          <hr />
         </div>
       </div>
     </div>
@@ -42,25 +40,24 @@ export default {
 }
 
 .product-container {
-  margin: auto;
+  margin: 20px auto;
   width: 100%;
   padding: 10px;
 }
 .product-row {
-  justify-content: center !important;
+  display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   margin-right: 15px;
   margin-left: 115px;
-  display: flex !important;
-  box-sizing: border-box;
+  
 }
 
 .product-deck {
+  display: flex;
   flex-flow: row wrap;
   margin-right: -15px;
   margin-left: -15px;
-  display: flex;
-  box-sizing: border-box;
 }
 
 .product-card {
@@ -103,7 +100,6 @@ img {
   border-top-left-radius: calc(0.25rem - 1px);
   border-top-right-radius: calc(0.25rem - 1px);
   border-style: none;
-  box-sizing: border-box;
 }
 
 button {
