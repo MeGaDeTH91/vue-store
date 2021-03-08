@@ -6,18 +6,20 @@
       </article>
       <article class="header-right">
         <ul class="nav-links">
-          <li
-            v-for="(route, index) in this.getRoutes"
-            :key="index"
-          >
-            <router-link class="nav-link" :to="route.link">{{ route.title }}</router-link>
+          <li v-for="(route, index) in this.getRoutes" :key="index">
+            <router-link class="nav-link" :to="route.link">{{
+              route.title
+            }}</router-link>
           </li>
         </ul>
       </article>
     </header>
     <slot></slot>
+    <br />
     <footer class="footer">
-      <p class="footer-text">Copyright &copy; 2021 Vue-Store - All Rights Reserved</p>
+      <p class="footer-text">
+        Copyright &copy; 2021 Vue-Store - All Rights Reserved
+      </p>
     </footer>
   </div>
 </template>
@@ -28,40 +30,36 @@ export default {
   name: "PageLayout",
   computed: {
     getRoutes() {
-      return getNavigationRoutes();
+      return getNavigationRoutes(this.$store.state.authentication);
     },
   },
   data() {
     return {};
   },
-  created() {
-    this.navigationRoutes = getNavigationRoutes;
-  },
 };
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300;1,400&display=swap");
 
 .container {
   max-width: 1650px;
   margin: 0 auto;
-  position: relative;
 }
 /* Header CSS */
 header {
   display: flex;
   justify-content: space-between;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   overflow: hidden;
-  padding: 0 50px;
+  padding: 30px 10px;
   margin: 30px 40px;
 }
 
 header a {
-  color: #EFEFE8FF;
+  color: #efefe8ff;
   text-align: center;
-  padding: 18px;
+  padding: 11px 18px 11px 18px;
   text-decoration: none;
   font-size: 22px;
   line-height: 25px;
@@ -69,7 +67,7 @@ header a {
 }
 
 .header-logo {
-  margin-top: 8px;
+  margin-top: 11px;
   font-size: 26px;
   font-weight: bold;
 }
@@ -78,7 +76,7 @@ header a {
   display: flex;
 }
 
-.nav-links li{
+.nav-links li {
   font-weight: bold;
   list-style: none;
 }
@@ -87,19 +85,29 @@ header a {
   background: grey;
   color: rgb(255, 104, 104);
   opacity: 50%;
-  border-radius: 4px;
+  border-radius: 8px;
+}
+
+footer {
+  position: fixed;
+  height: 30px;
+  margin-top: -50px;
+  bottom: 0;
+  bottom: 40px;
+  right: 50px;
+  margin-bottom: 0px;
 }
 
 .footer-text {
-  position: absolute;
   text-align: right;
-  left: 1175px;
-  top: 820px;
+  font-size: 15px;
   height: 20;
-  color: #EFEFE8FF;
+  color: #efefe8ff;
 }
 
-@media screen and (max-width: 600px) {
-  
+@media screen and (max-width: 1200px) {
+  .footer-text {
+    left: 100px;
+  }
 }
 </style>

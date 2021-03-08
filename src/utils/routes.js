@@ -1,11 +1,11 @@
-const getNavigationRoutes = (user) => {
+const getNavigationRoutes = (auth) => {
   const adminLinks = [
     {
-      title: "Explore Products",
+      title: "Products",
       link: "/",
     },
     {
-      title: "Shop by Category",
+      title: "Categories",
       link: "/categories/all",
     },
     {
@@ -36,11 +36,11 @@ const getNavigationRoutes = (user) => {
 
   const authLinks = [
     {
-      title: "Explore Products",
+      title: "Products",
       link: "/",
     },
     {
-      title: "Shop by Category",
+      title: "Categories",
       link: "/categories/all",
     },
     {
@@ -59,11 +59,11 @@ const getNavigationRoutes = (user) => {
 
   const guestLinks = [
     {
-      title: "Explore Products",
+      title: "Products",
       link: "/",
     },
     {
-      title: "Explore Categories",
+      title: "Categories",
       link: "/categories/all",
     },
     {
@@ -75,18 +75,14 @@ const getNavigationRoutes = (user) => {
       link: "/login",
     },
   ];
-  console.log(user)
-  console.log(adminLinks)
-  console.log(authLinks)
 
-  return guestLinks;
-  // if (!user || (user && !user.loggedIn)) {
-  //   return guestLinks;
-  // }
+  if (!auth.user || (auth.user && !auth.status.loggedIn)) {
+    return guestLinks;
+  }
 
-  // const isAdmin = user && user.isAdministrator;
+  const isAdmin = auth.user && auth.user.isAdministrator;
 
-  // return isAdmin ? adminLinks : authLinks;
+  return isAdmin ? adminLinks : authLinks;
 };
 
 export default getNavigationRoutes;

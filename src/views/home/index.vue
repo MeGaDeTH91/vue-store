@@ -1,18 +1,23 @@
 <template>
   <div class="product-container">
+    <h1>Products</h1>
     <div class="product-row">
-      <div class="product-deck" v-for="(product, index) in this.products" :key="index">
-        <div class="product-card">
+      <div class="product-deck">
+        <div class="product-card" v-for="(product, index) in this.products" :key="index">
           <div class="thumbnail" onClick="{onDetails}">
             <img :src="product.imageURL" alt="Card image cap"/>
           </div>
         </div>
       </div>
     </div>
+
+    <br>
   </div>
 </template>
 
 <script>
+import { HTTP } from "@/services/httpService";
+
 export default {
   data() {
     return {
@@ -24,9 +29,9 @@ export default {
   },
   methods: {
     async loadData() {
-      const response = await fetch("http://localhost:8000/api/products/all");
+      const response = await HTTP.get("products/all");
 
-      this.products = await response.json();
+      this.products = response.data;
     },
   },
 };
@@ -40,7 +45,7 @@ export default {
 }
 
 .product-container {
-  margin: 20px auto;
+  margin: 20px auto 350px auto;
   width: 100%;
   padding: 10px;
 }
