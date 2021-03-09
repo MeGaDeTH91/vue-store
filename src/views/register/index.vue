@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Login</h1>
+    <h1>Register</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -28,6 +28,28 @@
         </label>
       </div>
       <div class="form-group">
+        <label for="fullName"
+          >Full Name:
+          <input
+            type="text"
+            v-model="fullName"
+            name="fullName"
+            class="form-control"
+          />
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="phone"
+          >Phone:
+          <input
+            type="text"
+            v-model="phone"
+            name="phone"
+            class="form-control"
+          />
+        </label>
+      </div>
+      <div class="form-group">
         <label htmlFor="password"
           >Password:
           <input
@@ -38,8 +60,19 @@
           />
         </label>
       </div>
+      <div class="form-group">
+        <label htmlFor="rePassword"
+          >Re-Password:
+          <input
+            type="password"
+            v-model="rePassword"
+            name="rePassword"
+            class="form-control"
+          />
+        </label>
+      </div>
       <div class="form-button">
-        <button class="btn-primary">Login</button>
+        <button class="btn-primary">Register</button>
       </div>
     </form>
   </div>
@@ -50,7 +83,10 @@ export default {
   data() {
     return {
       email: "",
+      fullName: "",
+      phone: "",
       password: "",
+      rePassword: "",
       submitted: false,
     };
   },
@@ -58,11 +94,27 @@ export default {
     handleSubmit(e) {
       e.preventDefault();
       this.submitted = true;
-      const { email, password } = this;
-      const { dispatch } = this.$store;
-      if (email && password) {
-        dispatch("authentication/login", { email, password });
+      const { email, fullName, phone, password, rePassword } = this;
+
+      if (
+        !email ||
+        !fullName ||
+        !password ||
+        !rePassword ||
+        password !== rePassword
+      ) {
+        return;
       }
+
+      const { dispatch } = this.$store;
+
+      dispatch("authentication/register", {
+        email,
+        fullName,
+        phone,
+        password,
+        rePassword,
+      });
     },
   },
 };
@@ -95,7 +147,7 @@ label {
 .form-button {
   display: flex;
   justify-content: flex-end;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
 .btn-primary {

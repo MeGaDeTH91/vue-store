@@ -39,7 +39,7 @@ label {
 
 h1 {
   font-size: 45px;
-  margin: 0 0 71px 0;
+  margin: 11px 0 60px 0;
 }
 
 hr {

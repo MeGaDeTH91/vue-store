@@ -30,7 +30,7 @@ export default {
   name: "PageLayout",
   computed: {
     getRoutes() {
-      return getNavigationRoutes(this.$store.state.authentication);
+      return getNavigationRoutes(this.$store);
     },
   },
   data() {
@@ -93,14 +93,14 @@ footer {
   height: 30px;
   margin-top: -50px;
   bottom: 0;
-  bottom: 40px;
-  right: 50px;
+  bottom: 20px;
+  right: 20px;
   margin-bottom: 0px;
 }
 
 .footer-text {
   text-align: right;
-  font-size: 15px;
+  font-size: 14px;
   height: 20;
   color: #efefe8ff;
 }
