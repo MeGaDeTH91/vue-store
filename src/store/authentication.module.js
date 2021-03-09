@@ -10,14 +10,46 @@ const initialState = cookie
 export const authentication = {
   namespaced: true,
   state: initialState,
+  getters: {
+    loggedIn: (state) => {
+      return state.status.loggedIn;
+    },
+    user: (state) => {
+      return state.user;
+    },
+  },
   actions: {
-    login({ dispatch, commit }, { username, password }) {
-      commit("loginRequest", { username });
-
-      userService.login(username, password).then(
+    login({ dispatch, commit }, { email, password }) {
+      userService.login(email, password).then(
         (user) => {
-          commit("loginSuccess", user);
-          router.push("/");
+          setTimeout(() => {
+            commit("loginSuccess", user);
+          }, 500);
+          setTimeout(() => {
+            router.push("/");
+            router.go();
+          }, 100);
+        },
+        (error) => {
+          commit("loginFailure", error);
+          dispatch("alert/error", error, { root: true });
+        }
+      );
+    },
+    register(
+      { dispatch, commit },
+      { email, fullName, phone, password, rePassword }
+    ) {
+      userService.register(email, fullName, phone, password, rePassword).then(
+        (user) => {
+          setTimeout(() => {
+            router.push("/");
+            router.go();
+          }, 500);
+
+          setTimeout(() => {
+            commit("loginSuccess", user);
+          }, 100);
         },
         (error) => {
           commit("loginFailure", error);
@@ -27,14 +59,14 @@ export const authentication = {
     },
     logout({ commit }) {
       userService.logout();
-      commit("logout");
+      setTimeout(() => {
+        commit("logout");
+      }, 300);
+      router.push("/");
+      router.go();
     },
   },
   mutations: {
-    loginRequest(state, user) {
-      state.status = { loggingIn: true };
-      state.user = user;
-    },
     loginSuccess(state, user) {
       state.status = { loggedIn: true };
       state.user = user;

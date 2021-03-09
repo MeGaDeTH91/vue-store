@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/home';
 import Login from '../views/login';
+import Register from '../views/register';
 import Logout from '../views/logout';
 
 Vue.use(VueRouter)
@@ -19,6 +20,10 @@ const routes = [
   {
     path: '/login',
     component: Login
+  },
+  {
+    path: '/register',
+    component: Register
   },
   {
     path: '/logout',

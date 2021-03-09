@@ -1,4 +1,4 @@
-const getNavigationRoutes = (auth) => {
+const getNavigationRoutes = (store) => {
   const adminLinks = [
     {
       title: "Products",
@@ -75,12 +75,14 @@ const getNavigationRoutes = (auth) => {
       link: "/login",
     },
   ];
-
-  if (!auth.user || (auth.user && !auth.status.loggedIn)) {
+  const loggedIn = store.getters['authentication/loggedIn'];
+  const user = store.getters['authentication/user'];
+  
+  if (!user || (user && !loggedIn)) {
     return guestLinks;
   }
 
-  const isAdmin = auth.user && auth.user.isAdministrator;
+  const isAdmin = user && user.isAdministrator;
 
   return isAdmin ? adminLinks : authLinks;
 };
