@@ -44,32 +44,61 @@
     </form>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+} from 'vuelidate/lib/validators';
 export default {
   data() {
     return {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       submitted: false,
     };
   },
   methods: {
     handleSubmit(e) {
       e.preventDefault();
-      this.submitted = true;
       const { email, password } = this;
       const { dispatch } = this.$store;
-      if (email && password) {
-        dispatch("authentication/login", { email, password });
+
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        dispatch('alert/error', 'Please type in email and password correctly.');
+
+        setTimeout(() => {
+          dispatch('alert/clear');
+        }, 3500);
+
+        return;
       }
+      this.submitted = true;
+
+      if (email && password) {
+        dispatch('authentication/login', { email, password });
+      }
+    },
+  },
+  validations: {
+    email: {
+      required,
+      email,
+    },
+    password: {
+      required,
+      minLength: minLength(3),
+      maxLength: maxLength(40),
     },
   },
 };
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
 /* Home CSS  */
 .form-container {
   display: flex;
@@ -221,4 +250,3 @@ label {
   }
 }
 </style>
-  
