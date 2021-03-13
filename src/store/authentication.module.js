@@ -24,7 +24,7 @@ export const authentication = {
         (user) => {
           setTimeout(() => {
             commit("loginSuccess", user);
-          }, 500);
+          }, 5500);
           setTimeout(() => {
             router.push("/");
             router.go();

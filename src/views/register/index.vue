@@ -77,38 +77,46 @@
     </form>
   </div>
 </template>
-  
-  <script>
+
+<script>
+import {
+  required,
+  minLength,
+  maxLength,
+  email,
+} from 'vuelidate/lib/validators';
+
 export default {
   data() {
     return {
-      email: "",
-      fullName: "",
-      phone: "",
-      password: "",
-      rePassword: "",
+      email: '',
+      fullName: '',
+      phone: '',
+      password: '',
+      rePassword: '',
       submitted: false,
     };
   },
   methods: {
     handleSubmit(e) {
       e.preventDefault();
-      this.submitted = true;
       const { email, fullName, phone, password, rePassword } = this;
+      const { dispatch } = this.$store;
 
-      if (
-        !email ||
-        !fullName ||
-        !password ||
-        !rePassword ||
-        password !== rePassword
-      ) {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        dispatch('alert/error', 'Please fill all fields correctly.');
+
+        setTimeout(() => {
+          dispatch('alert/clear');
+        }, 3500);
+
         return;
       }
 
-      const { dispatch } = this.$store;
+      this.submitted = true;
 
-      dispatch("authentication/register", {
+      dispatch('authentication/register', {
         email,
         fullName,
         phone,
@@ -117,11 +125,35 @@ export default {
       });
     },
   },
+  validations: {
+    email: {
+      required,
+      email,
+    },
+    fullName: {
+      required,
+      minLength: minLength(5),
+      maxLength: maxLength(40),
+    },
+    phone: {
+      maxLength: maxLength(20),
+    },
+    password: {
+      required,
+      minLength: minLength(5),
+      maxLength: maxLength(40),
+    },
+    rePassword: {
+      required,
+      minLength: minLength(5),
+      maxLength: maxLength(40),
+    },
+  },
 };
 </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
 /* Home CSS  */
 .form-container {
   display: flex;
@@ -273,4 +305,3 @@ label {
   }
 }
 </style>
-  

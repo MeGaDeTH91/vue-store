@@ -14,33 +14,45 @@
         </ul>
       </article>
     </header>
+    <Popup
+      v-if="getAlert.message"
+      :type="getAlert.type"
+      :message="getAlert.message"
+    />
     <slot></slot>
     <br />
     <footer class="footer">
       <p class="footer-text">
-        Copyright &copy; 2021 Vue-Store - All Rights Reserved
+        Copyright &copy; 2021 - All Rights Reserved
       </p>
     </footer>
   </div>
 </template>
 
 <script>
-import getNavigationRoutes from "@/utils/routes.js";
+import getNavigationRoutes from '@/utils/routes.js';
+import Popup from '@/components/pop-up';
 export default {
-  name: "PageLayout",
+  name: 'PageLayout',
   computed: {
     getRoutes() {
       return getNavigationRoutes(this.$store);
+    },
+    getAlert() {
+      return this.$store.getters['alert/notification'];
     },
   },
   data() {
     return {};
   },
+  components: {
+    Popup,
+  },
 };
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300;1,400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300;1,400&display=swap');
 
 .container {
   max-width: 1650px;
@@ -50,7 +62,7 @@ export default {
 header {
   display: flex;
   justify-content: space-between;
-  font-family: "Lato", sans-serif;
+  font-family: 'Lato', sans-serif;
   overflow: hidden;
   padding: 30px 10px;
   margin: 30px 40px;
@@ -100,7 +112,7 @@ footer {
 
 .footer-text {
   text-align: right;
-  font-size: 14px;
+  font-size: 13px;
   height: 20;
   color: #efefe8ff;
 }

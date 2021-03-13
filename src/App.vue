@@ -42,11 +42,6 @@ h1 {
   margin: 11px 0 60px 0;
 }
 
-hr {
-  width: 50%;
-  margin: 50px auto;
-}
-
 body {
   margin: 0;
   padding: 0;
