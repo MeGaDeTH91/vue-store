@@ -4,48 +4,53 @@ import Home from '../views/home';
 import Login from '../views/login';
 import Register from '../views/register';
 import Logout from '../views/logout';
+import NotFound from '../views/not-found';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
   },
   {
     path: '/login',
-    component: Login
+    component: Login,
   },
   {
     path: '/register',
-    component: Register
+    component: Register,
   },
   {
     path: '/logout',
-    component: Logout
-  }
-]
+    component: Logout,
+  },
+  {
+    path: '*',
+    component: NotFound,
+  },
+];
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 // eslint-disable-next-line
 function checkAdminRights(to, from, next) {
   const ala = 5;
   // check if the user is admin
-  if(ala !== null) {
-      next({ path: '/adminroute'});       
+  if (ala !== null) {
+    next({ path: '/adminroute' });
   } else {
-      next({ path: '/nonadminroute'});
+    next({ path: '/nonadminroute' });
   }
 }
 
-export default router
+export default router;

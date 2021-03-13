@@ -5,31 +5,31 @@ export const alert = {
     message: null,
   },
   getters: {
-    type: (state) => {
-      return state.type;
-    },
-    message: (state) => {
-      return state.message;
+    notification: (state) => {
+      return {
+        type: state.type,
+        message: state.message,
+      };
     },
   },
   actions: {
     success({ commit }, message) {
-      commit("success", message);
+      commit('success', message);
     },
     error({ commit }, message) {
-      commit("error", message);
+      commit('error', message);
     },
     clear({ commit }) {
-      commit("clear");
+      commit('clear');
     },
   },
   mutations: {
     success(state, message) {
-      state.type = "alert-success";
+      state.type = 'popup-success';
       state.message = message;
     },
     error(state, message) {
-      state.type = "alert-danger";
+      state.type = 'popup-fail';
       state.message = message;
     },
     clear(state) {
