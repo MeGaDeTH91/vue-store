@@ -18,9 +18,6 @@ function login(email, password) {
 
 
 function register(email, fullName, phone, password, rePassword) {
-  console.log("HERE");
-
-  console.log(email, fullName, phone, password, rePassword)
   return HTTP.post(`users/register`, { email, fullName, phone, password, rePassword })
     .then((response) => {
       login(email, password);

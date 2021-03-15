@@ -1,42 +1,31 @@
 <template>
-  <div class="product-container">
-    <h1>Products</h1>
-    <div class="product-row">
-      <div class="product-deck">
+  <div class="category-container">
+    <h1>Categories</h1>
+    <div class="category-row">
+      <div class="category-deck">
         <div
-          class="product-card"
-          v-for="(product, index) in this.products"
+          class="category-card"
+          v-for="(category, index) in this.categories"
           :key="index"
         >
-          <div class="thumbnail" @click="$router.push(`/products/details/${product._id}`)">
-            <img :src="product.imageURL" alt="Card image cap" />
-            <div class="product-card-body">
-              <h4 class="product-title" v-if="product.title.length > 31">
-                {{ product.title }}
+          <div class="thumbnail" @click="$router.push(`/categories/details/${category._id}`)">
+            <img :src="category.imageURL" alt="Card image cap" />
+            <div class="category-card-body">
+              <h4 class="category-title" v-if="category.title.length > 21">
+                {{ category.title }}
               </h4>
-              <h4 class="product-title" v-else>
-                <div>{{ product.title }}<br /><br /></div>
+              <h4 class="category-title" v-else>
+                <div>{{ category.title }}<br /><br /></div>
               </h4>
-              <hr />
-              <h3>{{ formatProductPrice(product.price) }} lv.</h3>
-              <p>{{ product.quantity }} pieces left.</p>
             </div>
           </div>
-          <p class="product-card-category">
-            <router-link
-              class="link"
-              :to="`/categories/category/${product.category._id}`"
-              >{{ product.category.title }}</router-link
-            >
-          </p>
-          <div v-if="isAdmin" class="product-card-footer">
+          <div v-if="isAdmin" class="category-card-footer">
             <button
               class="btn-edit"
-              @click="$router.push(`/products/edit/${product._id}`)"
+              @click="$router.push(`/categories/edit/${category._id}`)"
             >
               Edit
             </button>
-            <button class="btn-delete" @click="$router.push(`/products/delete/${product._id}`)">Delete</button>
           </div>
         </div>
       </div>
@@ -47,7 +36,7 @@
 </template>
 
 <script>
-import { productService } from '@/services/productService';
+import { categoryService } from '@/services/categoryService';
 import formatPrice from '@/utils/priceFormatter';
 
 export default {
@@ -57,7 +46,7 @@ export default {
       ? this.$store.getters['authentication/user'].isAdministrator
       : false;
     return {
-      products: [],
+      categories: [],
       isAdmin,
     };
   },
@@ -70,7 +59,7 @@ export default {
       let response;
 
       try {
-        response = await productService.getAll();
+        response = await categoryService.getAll();
       } catch (error) {
         dispatch(
           'alert/error',
@@ -84,9 +73,9 @@ export default {
         return;
       }
 
-      this.products = response.data;
+      this.categories = response.data;
     },
-    formatProductPrice(price) {
+    formatcategoryPrice(price) {
       return formatPrice(price);
     },
   },
@@ -108,28 +97,28 @@ hr {
   margin: 0 auto;
 }
 
-.product-container {
+.category-container {
   margin: 20px auto 350px auto;
   width: 100%;
   padding: 10px;
 }
-.product-row {
+.category-row {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin: 0 auto;
 }
 
-.product-title {
-  margin: 11px;
+.category-title {
+  margin: 15px 0 25px 0;
 }
 
-.product-deck {
+.category-deck {
   display: flex;
   flex-flow: row wrap;
 }
 
-.product-card {
+.category-card {
   word-wrap: break-word;
   background-color: rgba(238, 238, 238, 0.75);
   border: 1px solid rgba(0, 0, 0, 0.125);
@@ -146,25 +135,26 @@ hr {
   margin-left: 50px;
 }
 
-.product-card-body {
+.category-card-body {
   flex: 1 1 auto;
   padding: 5px;
   word-wrap: break-word;
 }
 
-.product-card-body h3 {
-  font-size: 26px;
-}
-
-.product-card-category {
+.category-card-category {
   text-align: center;
   color: black;
   margin: 15px 0 25px 0;
 }
 
-.product-card-footer {
-  display: flex;
-  justify-content: flex-end;
+.category-card-footer {
+  border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
+  background-color: #dddddd;
+  color: white;
+  border-top: 1px solid #dddddd;
+  margin: 0;
+  padding: 0;
+  font-size: medium;
 }
 
 .btn-edit {
@@ -179,25 +169,6 @@ hr {
 }
 
 .btn-edit:hover {
-  cursor: pointer;
-  background: grey;
-  color: rgb(255, 104, 104);
-  opacity: 50%;
-  border-radius: 3px;
-}
-
-.btn-delete {
-  background: rgb(194, 167, 166);
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  border-radius: 3px;
-  border: none;
-  padding: 7px 21px 7px 21px;
-  margin: 7px;
-}
-
-.btn-delete:hover {
   cursor: pointer;
   background: grey;
   color: rgb(255, 104, 104);

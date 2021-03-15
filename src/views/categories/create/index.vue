@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Login</h1>
+    <h1>Create Category</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -15,60 +15,72 @@
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
     </div>
+    <img
+      v-if="imageURL"
+      :src="imageURL"
+      width="30%"
+      height="30%"
+      alt="Product visual representation will appear here"
+    />
     <form class="login-form" @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="email"
-          >Email:
+        <label for="title"
+          >Title:
           <input
-            type="email"
-            v-model="email"
-            name="email"
+            type="text"
+            v-model="title"
+            name="title"
             class="form-control"
           />
         </label>
       </div>
       <div class="form-group">
-        <label htmlFor="password"
-          >Password:
+        <label for="imageURL"
+          >Image URL:
           <input
-            type="password"
-            v-model="password"
-            name="password"
+            type="text"
+            v-model="imageURL"
+            name="imageURL"
             class="form-control"
           />
         </label>
       </div>
+      <div class="form-button widget-btn">
+        <button class="btn-primary" @click="openWidget">Upload Image</button>
+      </div>
       <div class="form-button">
-        <button class="btn-primary">Login</button>
+        <button class="btn-primary" type="submit">Create</button>
+        <button class="go-back-btn" @click="goBack">Go Back</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import {
-  required,
-  minLength,
-  maxLength,
-  email,
-} from 'vuelidate/lib/validators';
+import { required, minLength, maxLength } from 'vuelidate/lib/validators';
+import { HTTP } from '../../../services/httpService';
+import router from "@/router";
+
 export default {
   data() {
     return {
-      email: '',
-      password: '',
+      title: '',
+      imageURL: '',
       submitted: false,
     };
   },
   methods: {
     handleSubmit(e) {
       e.preventDefault();
-      const { email, password } = this;
+      const { title, imageURL } = this;
       const { dispatch } = this.$store;
 
       this.$v.$touch();
       if (this.$v.$invalid) {
-        dispatch('alert/error', 'Please type in email and password correctly.');
+        dispatch(
+          'alert/error',
+          'Please provide category title and upload Image.'
+        );
 
         setTimeout(() => {
           dispatch('alert/clear');
@@ -76,25 +88,51 @@ export default {
 
         return;
       }
+
       this.submitted = true;
 
-      dispatch('alert/success', 'Logged in successfully!');
+      HTTP.post('categories/create', {
+        title,
+        imageURL,
+      }).then(() => {
+        setTimeout(() => {
+          router.push('/categories/all');
+          router.go();
+        }, 500);
+      });
+    },
+    goBack(e) {
+      e.preventDefault();
 
-      setTimeout(() => {
-        dispatch('authentication/login', { email, password });
-        dispatch('alert/clear');
-      }, 2000);
+      this.$router.history.go(-1);
+    },
+    openWidget(e) {
+      e.preventDefault();
+
+      const widget = window.cloudinary.openUploadWidget(
+        {
+          cloudName: 'devpor11z',
+          uploadPreset: 'react-course',
+        },
+        (error, result) => {
+          if (result.event === 'success') {
+            this.imageURL = result.info.url;
+          }
+        }
+      );
+
+      widget.open();
     },
   },
   validations: {
-    email: {
-      required,
-      email,
-    },
-    password: {
+    title: {
       required,
       minLength: minLength(3),
-      maxLength: maxLength(40),
+      maxLength: maxLength(80),
+    },
+    imageURL: {
+      required,
+      minLength: minLength(5),
     },
   },
 };
@@ -106,7 +144,7 @@ export default {
 .form-container {
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(48, 28, 9, 0.534);
   max-width: 70%;
   margin: 80px auto;
   min-height: 650px;
@@ -118,7 +156,7 @@ export default {
 label {
   display: flex;
   justify-content: space-between;
-  color: rgb(119, 153, 113);
+  color: white;
   align-items: center;
   min-height: 30px;
   width: 100%;
@@ -128,14 +166,18 @@ label {
 .form-button {
   display: flex;
   justify-content: flex-end;
-  margin-top: 80px;
+  margin-top: 60px;
+}
+
+.widget-btn {
+  margin-top: 0;
 }
 
 .btn-primary {
   background: rgb(194, 167, 166);
   font-size: 18px;
   font-weight: bold;
-  color: black;
+  color: white;
   border-radius: 3px;
   border: none;
   padding: 11px 35px 11px 35px;

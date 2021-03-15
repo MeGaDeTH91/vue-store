@@ -31,18 +31,19 @@ export default {
 
 /* The actual popup */
 .popup-success .popuptext {
-  width: 160px;
+  width: 560px;
   background-color: #555;
   border: 2px solid rgb(37, 124, 98);
   color: #fff;
+  font-size: 21px;
   text-align: center;
   border-radius: 6px;
-  padding: 8px 0;
+  padding: 8px 4px;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
+  bottom: 124%;
   left: 50%;
-  margin-left: -225px;
+  margin-left: -285px;
 }
 
 /* Popup arrow */
@@ -76,18 +77,19 @@ export default {
 
 /* The actual popup */
 .popup-fail .popuptext {
-  width: 500px;
+  width: 560px;
   background-color: #555;
   color: #fff;
+  font-size: 21px;
   border: 2px solid rgb(124, 64, 37);
   text-align: center;
   border-radius: 6px;
-  padding: 8px 0;
+  padding: 8px 4px;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
+  bottom: 124%;
   left: 50%;
-  margin-left: -225px;
+  margin-left: -285px;
 }
 
 /* Popup arrow */
