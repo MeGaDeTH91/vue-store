@@ -4,6 +4,9 @@ import Home from '../views/home';
 import Login from '../views/login';
 import Register from '../views/register';
 import Logout from '../views/logout';
+import ProductCreate from '../views/products/create';
+import CategoriesAll from '../views/categories/all';
+import CategoryCreate from '../views/categories/create';
 import NotFound from '../views/not-found';
 
 Vue.use(VueRouter);
@@ -29,6 +32,18 @@ const routes = [
   {
     path: '/logout',
     component: Logout,
+  },
+  {
+    path: '/products/create',
+    component: ProductCreate,
+  },
+  {
+    path: '/categories/all',
+    component: CategoriesAll,
+  },
+  {
+    path: '/categories/create',
+    component: CategoryCreate,
   },
   {
     path: '*',

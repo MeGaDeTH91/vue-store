@@ -55,7 +55,7 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,300;1,400&display=swap');
 
 .container {
-  max-width: 1650px;
+  max-width: 1450px;
   margin: 0 auto;
 }
 /* Header CSS */

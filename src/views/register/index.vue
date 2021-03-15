@@ -109,20 +109,25 @@ export default {
 
         setTimeout(() => {
           dispatch('alert/clear');
-        }, 3500);
+        }, 4000);
 
         return;
       }
 
       this.submitted = true;
 
-      dispatch('authentication/register', {
-        email,
-        fullName,
-        phone,
-        password,
-        rePassword,
-      });
+      dispatch('alert/success', 'User registered successfully!');
+
+      setTimeout(() => {
+        dispatch('authentication/register', {
+          email,
+          fullName,
+          phone,
+          password,
+          rePassword,
+        });
+        dispatch('alert/clear');
+      }, 2000);
     },
   },
   validations: {
@@ -170,6 +175,7 @@ export default {
 label {
   display: flex;
   justify-content: space-between;
+  color: rgb(119, 153, 113);
   align-items: center;
   min-height: 30px;
   width: 100%;
@@ -194,6 +200,10 @@ label {
 
 .btn-primary:hover {
   cursor: pointer;
+  background: grey;
+  color: rgb(255, 104, 104);
+  opacity: 50%;
+  border-radius: 3px;
 }
 
 .form-control {

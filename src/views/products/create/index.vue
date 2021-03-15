@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Login</h1>
+    <h1>Create Product</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -15,60 +15,158 @@
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
     </div>
+    <img
+      v-if="imageURL"
+      :src="imageURL"
+      width="30%"
+      height="30%"
+      alt="Product visual representation will appear here"
+    />
     <form class="login-form" @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="email"
-          >Email:
+        <label for="title"
+          >Title:
           <input
-            type="email"
-            v-model="email"
-            name="email"
+            type="text"
+            v-model="title"
+            name="title"
             class="form-control"
           />
         </label>
       </div>
       <div class="form-group">
-        <label htmlFor="password"
-          >Password:
+        <label for="description"
+          >Description:
           <input
-            type="password"
-            v-model="password"
-            name="password"
+            type="text"
+            v-model="description"
+            name="description"
             class="form-control"
           />
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="imageURL"
+          >Image URL:
+          <input
+            type="text"
+            v-model="imageURL"
+            name="imageURL"
+            class="form-control"
+          />
+        </label>
+      </div>
+      <div class="form-button widget-btn">
+        <button class="btn-primary" @click="openWidget">Upload Image</button>
+      </div>
+      <div class="form-group">
+        <label htmlFor="price"
+          >Price:
+          <input
+            type="number"
+            v-model="price"
+            name="price"
+            class="form-control"
+          />
+        </label>
+      </div>
+      <div class="form-group">
+        <label htmlFor="quantity"
+          >Quantity:
+          <input
+            type="number"
+            v-model="quantity"
+            name="quantity"
+            class="form-control"
+          />
+        </label>
+      </div>
+      <div class="">
+        <label htmlFor="category" @click="print"
+          >Category:
+          <v-select
+            class="dropdown"
+            placeholder="Please select an option"
+            :options="categories"
+            :reduce="(category) => category._id"
+            v-model="category"
+            label="title"
+          ></v-select>
         </label>
       </div>
       <div class="form-button">
-        <button class="btn-primary">Login</button>
+        <button class="btn-primary" type="submit">Create</button>
+        <button class="go-back-btn" @click="goBack">Go Back</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+import 'vue-select/dist/vue-select.css';
+import { categoryService } from '@/services/categoryService';
+import { HTTP } from '../../../services/httpService';
+import router from "@/router";
+
 import {
   required,
   minLength,
   maxLength,
-  email,
+  between,
 } from 'vuelidate/lib/validators';
+
 export default {
   data() {
     return {
-      email: '',
-      password: '',
+      title: '',
+      description: '',
+      imageURL: '',
+      price: '',
+      quantity: '',
+      category: '',
+      categories: [],
       submitted: false,
     };
   },
+  created() {
+    this.loadData();
+  },
   methods: {
+    print() {
+      console.log(this.category);
+    },
+    async loadData() {
+      const { dispatch } = this.$store;
+      let response;
+
+      try {
+        response = await categoryService.getAll();
+      } catch (error) {
+        dispatch(
+          'alert/error',
+          'There is a problem with database, please try again later.'
+        );
+
+        setTimeout(() => {
+          dispatch('alert/clear');
+        }, 10000);
+
+        return;
+      }
+
+      this.categories = response.data;
+    },
     handleSubmit(e) {
       e.preventDefault();
-      const { email, password } = this;
+      const { title, description, imageURL, price, quantity, category } = this;
       const { dispatch } = this.$store;
 
       this.$v.$touch();
       if (this.$v.$invalid) {
-        dispatch('alert/error', 'Please type in email and password correctly.');
+        dispatch(
+          'alert/error',
+          'Please provide product title, description, upload Image and choose category.'
+        );
 
         setTimeout(() => {
           dispatch('alert/clear');
@@ -76,25 +174,71 @@ export default {
 
         return;
       }
+
       this.submitted = true;
 
-      dispatch('alert/success', 'Logged in successfully!');
+      HTTP.post('products/create', {
+        title,
+        description,
+        imageURL,
+        price,
+        quantity,
+        category,
+      }).then(() => {
+        setTimeout(() => {
+          router.push('/');
+          router.go();
+        }, 500);
+      });
+    },
+    goBack(e) {
+      e.preventDefault();
 
-      setTimeout(() => {
-        dispatch('authentication/login', { email, password });
-        dispatch('alert/clear');
-      }, 2000);
+      this.$router.history.go(-1);
+    },
+    openWidget(e) {
+      e.preventDefault();
+
+      const widget = window.cloudinary.openUploadWidget(
+        {
+          cloudName: 'devpor11z',
+          uploadPreset: 'react-course',
+        },
+        (error, result) => {
+          if (result.event === 'success') {
+            this.imageURL = result.info.url;
+          }
+        }
+      );
+
+      widget.open();
     },
   },
   validations: {
-    email: {
+    title: {
       required,
-      email,
+      minLength: minLength(5),
+      maxLength: maxLength(50),
     },
-    password: {
+    description: {
       required,
-      minLength: minLength(3),
-      maxLength: maxLength(40),
+      minLength: minLength(8),
+      maxLength: maxLength(100),
+    },
+    imageURL: {
+      required,
+      minLength: minLength(5),
+    },
+    price: {
+      required,
+      between: between(0, 10000),
+    },
+    quantity: {
+      required,
+      between: between(0, 10000),
+    },
+    category: {
+      required,
     },
   },
 };
@@ -106,7 +250,7 @@ export default {
 .form-container {
   display: flex;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(48, 28, 9, 0.534);
   max-width: 70%;
   margin: 80px auto;
   min-height: 650px;
@@ -118,7 +262,7 @@ export default {
 label {
   display: flex;
   justify-content: space-between;
-  color: rgb(119, 153, 113);
+  color: white;
   align-items: center;
   min-height: 30px;
   width: 100%;
@@ -128,14 +272,27 @@ label {
 .form-button {
   display: flex;
   justify-content: flex-end;
-  margin-top: 80px;
+  margin-top: 60px;
+}
+
+.widget-btn {
+  margin-top: 0;
+}
+
+.dropdown {
+  color: white;
+  right: 10px;
+  background-color: white;
+  padding: 3px;
+  width: 65%;
+  border-color: #17a2b8;
 }
 
 .btn-primary {
   background: rgb(194, 167, 166);
   font-size: 18px;
   font-weight: bold;
-  color: black;
+  color: white;
   border-radius: 3px;
   border: none;
   padding: 11px 35px 11px 35px;
