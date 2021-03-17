@@ -106,7 +106,7 @@ footer {
   margin-top: -50px;
   bottom: 0;
   bottom: 20px;
-  right: 20px;
+  left: 20px;
   margin-bottom: 0px;
 }
 
