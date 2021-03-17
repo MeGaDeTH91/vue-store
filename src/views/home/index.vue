@@ -25,7 +25,7 @@
           <p class="product-card-category">
             <router-link
               class="link"
-              :to="`/categories/category/${product.category._id}`"
+              :to="`/categories/${product.category._id}/products`"
               >{{ product.category.title }}</router-link
             >
           </p>
@@ -70,7 +70,7 @@ export default {
       let response;
 
       try {
-        response = await productService.getAll();
+        response = await productService.getAllProducts();
       } catch (error) {
         dispatch(
           'alert/error',

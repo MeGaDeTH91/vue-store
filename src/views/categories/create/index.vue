@@ -58,7 +58,7 @@
 
 <script>
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
-import { HTTP } from '../../../services/httpService';
+import { categoryService } from '@/services/categoryService';
 import router from "@/router";
 
 export default {
@@ -79,7 +79,7 @@ export default {
       if (this.$v.$invalid) {
         dispatch(
           'alert/error',
-          'Please provide category title and upload Image.'
+          'Please provide category title and image.'
         );
 
         setTimeout(() => {
@@ -91,15 +91,25 @@ export default {
 
       this.submitted = true;
 
-      HTTP.post('categories/create', {
-        title,
-        imageURL,
-      }).then(() => {
-        setTimeout(() => {
-          router.push('/categories/all');
-          router.go();
-        }, 500);
-      });
+      categoryService
+        .createCategory(title, imageURL)
+        .then(() => {
+          dispatch('alert/success', 'Category created successfully!');
+
+          setTimeout(() => {
+            router.push('/categories/all');
+            router.go();
+          }, 500);
+        })
+        .catch((err) => {
+          dispatch('alert/error', err.response.data);
+
+          setTimeout(() => {
+            dispatch('alert/clear');
+            this.submitted = false;
+          }, 4000);
+          return;
+        });
     },
     goBack(e) {
       e.preventDefault();

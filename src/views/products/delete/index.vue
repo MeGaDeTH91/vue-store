@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Create Product</h1>
+    <h1>Delete Product</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -27,6 +27,7 @@
         <label for="title"
           >Title:
           <input
+            disabled
             type="text"
             v-model="title"
             name="title"
@@ -38,6 +39,7 @@
         <label for="description"
           >Description:
           <textarea
+            disabled
             type="text"
             v-model="description"
             name="description"
@@ -49,6 +51,7 @@
         <label for="imageURL"
           >Image URL:
           <input
+            disabled
             type="text"
             v-model="imageURL"
             name="imageURL"
@@ -56,13 +59,11 @@
           />
         </label>
       </div>
-      <div class="form-button widget-btn">
-        <button class="btn-primary" @click="openWidget">Upload Image</button>
-      </div>
       <div class="form-group">
         <label htmlFor="price"
           >Price:
           <input
+            disabled
             type="number"
             step="any"
             v-model="price"
@@ -75,6 +76,7 @@
         <label htmlFor="quantity"
           >Quantity:
           <input
+            disabled
             type="number"
             v-model="quantity"
             name="quantity"
@@ -86,6 +88,7 @@
         <label htmlFor="category"
           >Category:
           <v-select
+            disabled
             class="dropdown"
             placeholder="Please select an option"
             :options="categories"
@@ -96,7 +99,7 @@
         </label>
       </div>
       <div class="form-button">
-        <button class="btn-primary" type="submit">Create</button>
+        <button class="btn-primary" type="submit">Delete</button>
         <button class="go-back-btn" @click="goBack">Go Back</button>
       </div>
     </form>
@@ -105,20 +108,14 @@
 
 <script>
 import 'vue-select/dist/vue-select.css';
-import { categoryService } from '@/services/categoryService';
 import { productService } from '@/services/productService';
+import { categoryService } from '@/services/categoryService';
 import router from '@/router';
-
-import {
-  required,
-  minLength,
-  maxLength,
-  between,
-} from 'vuelidate/lib/validators';
 
 export default {
   data() {
     return {
+      productId: '',
       title: '',
       description: '',
       imageURL: '',
@@ -135,51 +132,47 @@ export default {
   methods: {
     async loadData() {
       const { dispatch } = this.$store;
-
-      categoryService
-        .getAllCategories()
-        .then((response) => {
-          this.categories = response.data;
-        })
-        .catch((err) => {
-          console.log(err.response.data);
-          dispatch(
-            'alert/error',
-            'There is a problem with database, please try again later.'
-          );
-
-          setTimeout(() => {
-            dispatch('alert/clear');
-            this.submitted = false;
-          }, 10000);
-          return;
-        });
-    },
-    handleSubmit(e) {
-      e.preventDefault();
-      const { title, description, imageURL, price, quantity, category } = this;
-      const { dispatch } = this.$store;
-
-      this.$v.$touch();
-      if (this.$v.$invalid) {
+      let productResponse;
+      let categoryResponse;
+      this.productId = this.$route.params.id;
+      
+      try {
+        productResponse = await productService.getProduct(this.productId);
+        categoryResponse = await categoryService.getAllCategories();
+      } catch (error) {
         dispatch(
           'alert/error',
-          'Please provide product title, description, provide image and choose category.'
+          'There is a problem with database, please try again later.'
         );
 
         setTimeout(() => {
           dispatch('alert/clear');
-        }, 4000);
+        }, 10000);
 
         return;
       }
 
+      let product = productResponse.data;
+      this.categories = categoryResponse.data;
+
+      this.title = product.title;
+      this.description = product.description;
+      this.imageURL = product.imageURL;
+      this.price = product.price;
+      this.quantity = product.quantity;
+      this.category = product.category;
+    },
+    handleSubmit(e) {
+      e.preventDefault();
+      const { productId } = this;
+      const { dispatch } = this.$store;
+
       this.submitted = true;
 
       productService
-        .createProduct(title, description, imageURL, price, quantity, category)
+        .deleteProduct(productId)
         .then(() => {
-          dispatch('alert/success', 'Product created successfully!');
+          dispatch('alert/success', 'Product removed successfully!');
 
           setTimeout(() => {
             router.push('/');
@@ -217,32 +210,6 @@ export default {
       );
 
       widget.open();
-    },
-  },
-  validations: {
-    title: {
-      required,
-      minLength: minLength(6),
-      maxLength: maxLength(35),
-    },
-    description: {
-      required,
-      minLength: minLength(10),
-      maxLength: maxLength(250),
-    },
-    imageURL: {
-      required,
-    },
-    price: {
-      required,
-      between: between(0, 1000000000),
-    },
-    quantity: {
-      required,
-      between: between(0, 100000000),
-    },
-    category: {
-      required,
     },
   },
 };
@@ -325,6 +292,11 @@ textarea {
 
 .form-group label {
   font-size: 19px;
+}
+
+.form-group input,
+.form-group textarea {
+  color: white;
 }
 
 .ispinner {

@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Create Product</h1>
+    <h1>Edit Category</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -35,17 +35,6 @@
         </label>
       </div>
       <div class="form-group">
-        <label for="description"
-          >Description:
-          <textarea
-            type="text"
-            v-model="description"
-            name="description"
-            class="form-control"
-          />
-        </label>
-      </div>
-      <div class="form-group">
         <label for="imageURL"
           >Image URL:
           <input
@@ -59,44 +48,8 @@
       <div class="form-button widget-btn">
         <button class="btn-primary" @click="openWidget">Upload Image</button>
       </div>
-      <div class="form-group">
-        <label htmlFor="price"
-          >Price:
-          <input
-            type="number"
-            step="any"
-            v-model="price"
-            name="price"
-            class="form-control"
-          />
-        </label>
-      </div>
-      <div class="form-group">
-        <label htmlFor="quantity"
-          >Quantity:
-          <input
-            type="number"
-            v-model="quantity"
-            name="quantity"
-            class="form-control"
-          />
-        </label>
-      </div>
-      <div class="">
-        <label htmlFor="category"
-          >Category:
-          <v-select
-            class="dropdown"
-            placeholder="Please select an option"
-            :options="categories"
-            :reduce="(category) => category._id"
-            v-model="category"
-            label="title"
-          ></v-select>
-        </label>
-      </div>
       <div class="form-button">
-        <button class="btn-primary" type="submit">Create</button>
+        <button class="btn-primary" type="submit">Edit</button>
         <button class="go-back-btn" @click="goBack">Go Back</button>
       </div>
     </form>
@@ -106,26 +59,16 @@
 <script>
 import 'vue-select/dist/vue-select.css';
 import { categoryService } from '@/services/categoryService';
-import { productService } from '@/services/productService';
 import router from '@/router';
 
-import {
-  required,
-  minLength,
-  maxLength,
-  between,
-} from 'vuelidate/lib/validators';
+import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
 export default {
   data() {
     return {
+      categoryId: '',
       title: '',
-      description: '',
       imageURL: '',
-      price: '',
-      quantity: '',
-      category: '',
-      categories: [],
       submitted: false,
     };
   },
@@ -135,37 +78,32 @@ export default {
   methods: {
     async loadData() {
       const { dispatch } = this.$store;
+      this.categoryId = this.$route.params.id;
 
       categoryService
-        .getAllCategories()
+        .getCategory(this.categoryId)
         .then((response) => {
-          this.categories = response.data;
+          this.title = response.data.title;
+          this.imageURL = response.data.imageURL;
         })
         .catch((err) => {
-          console.log(err.response.data);
-          dispatch(
-            'alert/error',
-            'There is a problem with database, please try again later.'
-          );
+          dispatch('alert/error', err.response.data);
 
           setTimeout(() => {
             dispatch('alert/clear');
             this.submitted = false;
-          }, 10000);
+          }, 4000);
           return;
         });
     },
     handleSubmit(e) {
       e.preventDefault();
-      const { title, description, imageURL, price, quantity, category } = this;
+      const { categoryId, title, imageURL } = this;
       const { dispatch } = this.$store;
 
       this.$v.$touch();
       if (this.$v.$invalid) {
-        dispatch(
-          'alert/error',
-          'Please provide product title, description, provide image and choose category.'
-        );
+        dispatch('alert/error', 'Please provide category title and image.');
 
         setTimeout(() => {
           dispatch('alert/clear');
@@ -176,13 +114,13 @@ export default {
 
       this.submitted = true;
 
-      productService
-        .createProduct(title, description, imageURL, price, quantity, category)
+      categoryService
+        .editCategory(categoryId, title, imageURL)
         .then(() => {
-          dispatch('alert/success', 'Product created successfully!');
+          dispatch('alert/success', 'Category updated successfully!');
 
           setTimeout(() => {
-            router.push('/');
+            router.push('/categories/all');
             router.go();
           }, 500);
         })
@@ -222,26 +160,10 @@ export default {
   validations: {
     title: {
       required,
-      minLength: minLength(6),
+      minLength: minLength(5),
       maxLength: maxLength(35),
     },
-    description: {
-      required,
-      minLength: minLength(10),
-      maxLength: maxLength(250),
-    },
     imageURL: {
-      required,
-    },
-    price: {
-      required,
-      between: between(0, 1000000000),
-    },
-    quantity: {
-      required,
-      between: between(0, 100000000),
-    },
-    category: {
       required,
     },
   },
