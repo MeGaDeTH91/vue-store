@@ -11,7 +11,7 @@
           <div class="thumbnail" @click="$router.push(`/products/details/${product._id}`)">
             <img :src="product.imageURL" alt="Card image cap" />
             <div class="product-card-body">
-              <h4 class="product-title" v-if="product.title.length > 31">
+              <h4 class="product-title" v-if="product.title.length > 30">
                 {{ product.title }}
               </h4>
               <h4 class="product-title" v-else>
@@ -121,7 +121,7 @@ hr {
 }
 
 .product-title {
-  margin: 11px;
+  margin: 11px 17px;
 }
 
 .product-deck {
@@ -136,7 +136,7 @@ hr {
   border-radius: 0.25rem;
   position: relative;
   min-width: 18rem;
-  max-width: 18rem;
+  max-width: 19rem;
   margin-bottom: 1.5rem;
   display: flex;
   flex: 1 0 0%;

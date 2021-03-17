@@ -1,7 +1,7 @@
 <template>
   <img
     alt="404 logo"
-    src="https://freefrontend.com/assets/img/html-funny-404-pages/CodePen-404-Page.gif"
+    src="@/assets/404.png"
   />
 </template>
 

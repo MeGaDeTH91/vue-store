@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Create Product</h1>
+    <h1>Edit Product</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -96,7 +96,7 @@
         </label>
       </div>
       <div class="form-button">
-        <button class="btn-primary" type="submit">Create</button>
+        <button class="btn-primary" type="submit">Edit</button>
         <button class="go-back-btn" @click="goBack">Go Back</button>
       </div>
     </form>
@@ -105,8 +105,8 @@
 
 <script>
 import 'vue-select/dist/vue-select.css';
+import { productService } from '@/services/productService';
 import { categoryService } from '@/services/categoryService';
-import { HTTP } from '../../../services/httpService';
 import router from '@/router';
 
 import {
@@ -119,6 +119,7 @@ import {
 export default {
   data() {
     return {
+      productId: '',
       title: '',
       description: '',
       imageURL: '',
@@ -135,10 +136,13 @@ export default {
   methods: {
     async loadData() {
       const { dispatch } = this.$store;
-      let response;
+      let productResponse;
+      let categoryResponse;
+      this.productId = this.$route.params.id;
 
       try {
-        response = await categoryService.getAll();
+        productResponse = await productService.get(this.productId);
+        categoryResponse = await categoryService.getAll();
       } catch (error) {
         dispatch(
           'alert/error',
@@ -152,11 +156,27 @@ export default {
         return;
       }
 
-      this.categories = response.data;
+      let product = productResponse.data;
+      this.categories = categoryResponse.data;
+
+      this.title = product.title;
+      this.description = product.description;
+      this.imageURL = product.imageURL;
+      this.price = product.price;
+      this.quantity = product.quantity;
+      this.category = product.category;
     },
     handleSubmit(e) {
       e.preventDefault();
-      const { title, description, imageURL, price, quantity, category } = this;
+      const {
+        productId,
+        title,
+        description,
+        imageURL,
+        price,
+        quantity,
+        category,
+      } = this;
       const { dispatch } = this.$store;
 
       this.$v.$touch();
@@ -175,19 +195,24 @@ export default {
 
       this.submitted = true;
 
-      HTTP.post('products/create', {
-        title,
-        description,
-        imageURL,
-        price,
-        quantity,
-        category,
-      }).then(() => {
+      try {
+        productService.edit(
+          productId,
+          title,
+          description,
+          imageURL,
+          price,
+          quantity,
+          category
+        );
+
         setTimeout(() => {
           router.push('/');
           router.go();
         }, 500);
-      });
+      } catch (error) {
+        console.log(error)
+      }
     },
     goBack(e) {
       e.preventDefault();

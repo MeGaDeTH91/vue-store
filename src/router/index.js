@@ -5,6 +5,7 @@ import Login from '../views/login';
 import Register from '../views/register';
 import Logout from '../views/logout';
 import ProductCreate from '../views/products/create';
+import ProductEdit from '../views/products/edit';
 import CategoriesAll from '../views/categories/all';
 import CategoryCreate from '../views/categories/create';
 import NotFound from '../views/not-found';
@@ -36,6 +37,10 @@ const routes = [
   {
     path: '/products/create',
     component: ProductCreate,
+  },
+  {
+    path: '/products/edit/:id',
+    component: ProductEdit,
   },
   {
     path: '/categories/all',
