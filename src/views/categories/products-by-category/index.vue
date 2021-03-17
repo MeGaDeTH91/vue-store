@@ -1,30 +1,45 @@
 <template>
-  <div class="category-container">
-    <h1>Categories</h1>
-    <div class="category-row">
-      <div class="category-deck">
+  <div class="product-container">
+    <h1>Products by category "{{ categoryTitle }}"</h1>
+    <div class="product-row">
+      <div class="product-deck">
         <div
-          class="category-card"
-          v-for="(category, index) in this.categories"
+          class="product-card"
+          v-for="(product, index) in this.products"
           :key="index"
         >
-          <div class="thumbnail" @click="$router.push(`/categories/${category._id}/products`)">
-            <img :src="category.imageURL" alt="Card image cap" />
-            <div class="category-card-body">
-              <h4 class="category-title" v-if="category.title.length > 21">
-                {{ category.title }}
+          <div
+            class="thumbnail"
+            @click="$router.push(`/products/details/${product._id}`)"
+          >
+            <img :src="product.imageURL" alt="Card image cap" />
+            <div class="product-card-body">
+              <h4 class="product-title" v-if="product.title.length > 30">
+                {{ product.title }}
               </h4>
-              <h4 class="category-title" v-else>
-                <div>{{ category.title }}<br /><br /></div>
+              <h4 class="product-title" v-else>
+                <div>{{ product.title }}<br /><br /></div>
               </h4>
+              <hr />
+              <h3>{{ formatProductPrice(product.price) }} lv.</h3>
+              <p>{{ product.quantity }} pieces left.</p>
             </div>
           </div>
-          <div v-if="isAdmin" class="category-card-footer">
+          <p class="product-card-category">
+            {{ categoryTitle }}
+          </p>
+          <div v-if="isAdmin" class="product-card-footer">
             <button
               class="btn-edit"
-              @click="$router.push(`/categories/edit/${category._id}`)"
+              @click="$router.push(`/products/edit/${product._id}`)"
             >
               Edit
+            </button>
+            <button
+              class="btn-delete"
+              @click="$router.push(`/products/delete/${product._id}`)"
+            >
+              Delete
             </button>
           </div>
         </div>
@@ -46,7 +61,8 @@ export default {
       ? this.$store.getters['authentication/user'].isAdministrator
       : false;
     return {
-      categories: [],
+      categoryTitle: '',
+      products: [],
       isAdmin,
     };
   },
@@ -56,26 +72,26 @@ export default {
   methods: {
     async loadData() {
       const { dispatch } = this.$store;
-      let response;
+      let categoryId = this.$route.params.id;
 
-      try {
-        response = await categoryService.getAllCategories();
-      } catch (error) {
-        dispatch(
-          'alert/error',
-          'There is a problem with database, please try again later.'
-        );
+      categoryService
+        .getCategory(categoryId)
+        .then((response) => {
+          let category = response.data;
+          this.categoryTitle = category.title;
+          this.products = category.products;
+        })
+        .catch((err) => {
+          dispatch('alert/error', err.response.data);
 
-        setTimeout(() => {
-          dispatch('alert/clear');
-        }, 10000);
-
-        return;
-      }
-
-      this.categories = response.data;
+          setTimeout(() => {
+            dispatch('alert/clear');
+            this.submitted = false;
+          }, 4000);
+          return;
+        });
     },
-    formatcategoryPrice(price) {
+    formatProductPrice(price) {
       return formatPrice(price);
     },
   },
@@ -97,35 +113,35 @@ hr {
   margin: 0 auto;
 }
 
-.category-container {
+.product-container {
   margin: 20px auto 350px auto;
   width: 100%;
   padding: 10px;
 }
-.category-row {
+.product-row {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   margin: 0 auto;
 }
 
-.category-title {
-  margin: 15px 0 25px 0;
+.product-title {
+  margin: 11px 17px;
 }
 
-.category-deck {
+.product-deck {
   display: flex;
   flex-flow: row wrap;
 }
 
-.category-card {
+.product-card {
   word-wrap: break-word;
   background-color: rgba(238, 238, 238, 0.75);
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;
   position: relative;
   min-width: 18rem;
-  max-width: 18rem;
+  max-width: 19rem;
   margin-bottom: 1.5rem;
   display: flex;
   flex: 1 0 0%;
@@ -135,26 +151,25 @@ hr {
   margin-left: 50px;
 }
 
-.category-card-body {
+.product-card-body {
   flex: 1 1 auto;
   padding: 5px;
   word-wrap: break-word;
 }
 
-.category-card-category {
+.product-card-body h3 {
+  font-size: 26px;
+}
+
+.product-card-category {
   text-align: center;
   color: black;
   margin: 15px 0 25px 0;
 }
 
-.category-card-footer {
-  border-radius: 0 0 calc(0.25rem - 1px) calc(0.25rem - 1px);
-  background-color: #dddddd;
-  color: white;
-  border-top: 1px solid #dddddd;
-  margin: 0;
-  padding: 0;
-  font-size: medium;
+.product-card-footer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .btn-edit {
@@ -169,6 +184,25 @@ hr {
 }
 
 .btn-edit:hover {
+  cursor: pointer;
+  background: grey;
+  color: rgb(255, 104, 104);
+  opacity: 50%;
+  border-radius: 3px;
+}
+
+.btn-delete {
+  background: rgb(194, 167, 166);
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  border-radius: 3px;
+  border: none;
+  padding: 7px 21px 7px 21px;
+  margin: 7px;
+}
+
+.btn-delete:hover {
   cursor: pointer;
   background: grey;
   color: rgb(255, 104, 104);

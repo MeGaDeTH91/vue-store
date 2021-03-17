@@ -86,6 +86,7 @@
         <label htmlFor="category"
           >Category:
           <v-select
+            disabled
             class="dropdown"
             placeholder="Please select an option"
             :options="categories"
@@ -141,8 +142,8 @@ export default {
       this.productId = this.$route.params.id;
 
       try {
-        productResponse = await productService.get(this.productId);
-        categoryResponse = await categoryService.getAll();
+        productResponse = await productService.getProduct(this.productId);
+        categoryResponse = await categoryService.getAllCategories();
       } catch (error) {
         dispatch(
           'alert/error',
@@ -183,7 +184,7 @@ export default {
       if (this.$v.$invalid) {
         dispatch(
           'alert/error',
-          'Please provide product title, description, upload Image and choose category.'
+          'Please provide product title, description, provide image and choose category.'
         );
 
         setTimeout(() => {
@@ -195,8 +196,8 @@ export default {
 
       this.submitted = true;
 
-      try {
-        productService.edit(
+      productService
+        .editProduct(
           productId,
           title,
           description,
@@ -204,15 +205,24 @@ export default {
           price,
           quantity,
           category
-        );
+        )
+        .then(() => {
+          dispatch('alert/success', 'Product updated successfully!');
 
-        setTimeout(() => {
-          router.push('/');
-          router.go();
-        }, 500);
-      } catch (error) {
-        console.log(error)
-      }
+          setTimeout(() => {
+            router.push('/');
+            router.go();
+          }, 500);
+        })
+        .catch((err) => {
+          dispatch('alert/error', err.response.data);
+
+          setTimeout(() => {
+            dispatch('alert/clear');
+            this.submitted = false;
+          }, 4000);
+          return;
+        });
     },
     goBack(e) {
       e.preventDefault();
@@ -241,16 +251,15 @@ export default {
     title: {
       required,
       minLength: minLength(5),
-      maxLength: maxLength(50),
+      maxLength: maxLength(35),
     },
     description: {
       required,
       minLength: minLength(8),
-      maxLength: maxLength(100),
+      maxLength: maxLength(250),
     },
     imageURL: {
       required,
-      minLength: minLength(5),
     },
     price: {
       required,
@@ -258,7 +267,7 @@ export default {
     },
     quantity: {
       required,
-      between: between(0, 10000),
+      between: between(0, 100000000),
     },
     category: {
       required,

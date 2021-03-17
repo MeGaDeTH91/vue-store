@@ -6,8 +6,11 @@ import Register from '../views/register';
 import Logout from '../views/logout';
 import ProductCreate from '../views/products/create';
 import ProductEdit from '../views/products/edit';
+import ProductDelete from '../views/products/delete';
 import CategoriesAll from '../views/categories/all';
 import CategoryCreate from '../views/categories/create';
+import CategoryEdit from '../views/categories/edit';
+import CategoryProducts from '../views/categories/products-by-category';
 import NotFound from '../views/not-found';
 
 Vue.use(VueRouter);
@@ -43,12 +46,24 @@ const routes = [
     component: ProductEdit,
   },
   {
+    path: '/products/delete/:id',
+    component: ProductDelete,
+  },
+  {
     path: '/categories/all',
     component: CategoriesAll,
   },
   {
     path: '/categories/create',
     component: CategoryCreate,
+  },
+  {
+    path: '/categories/edit/:id',
+    component: CategoryEdit,
+  },
+  {
+    path: '/categories/:id/products',
+    component: CategoryProducts,
   },
   {
     path: '*',
