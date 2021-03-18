@@ -35,6 +35,7 @@
             v-model="password"
             name="password"
             class="form-control"
+            autocomplete="on"
           />
         </label>
       </div>

@@ -11,7 +11,11 @@ import CategoriesAll from '../views/categories/all';
 import CategoryCreate from '../views/categories/create';
 import CategoryEdit from '../views/categories/edit';
 import CategoryProducts from '../views/categories/products-by-category';
+import ProfileDetails from '../views/profile/profile-details';
+import ProfileEdit from '../views/profile/profile-edit';
+import ManageUsers from '../views/users';
 import NotFound from '../views/not-found';
+import { store } from '@/store';
 
 Vue.use(VueRouter);
 
@@ -27,6 +31,7 @@ const routes = [
   },
   {
     path: '/login',
+    name: 'login',
     component: Login,
   },
   {
@@ -63,7 +68,23 @@ const routes = [
   },
   {
     path: '/categories/:id/products',
+    name: 'category-products',
     component: CategoryProducts,
+  },
+  {
+    path: '/profile-details',
+    name: 'profile-details',
+    component: ProfileDetails
+  },
+  {
+    path: '/profile-edit',
+    name: 'profile-edit',
+    component: ProfileEdit
+  },
+  {
+    path: '/users',
+    name: 'users',
+    component: ManageUsers
   },
   {
     path: '*',
@@ -77,15 +98,45 @@ const router = new VueRouter({
   routes,
 });
 
-// eslint-disable-next-line
-function checkAdminRights(to, from, next) {
-  const ala = 5;
-  // check if the user is admin
-  if (ala !== null) {
-    next({ path: '/adminroute' });
-  } else {
-    next({ path: '/nonadminroute' });
+router.beforeEach((to, from, next) => {
+  const guestOnlyPages = ['/register', '/login'];
+  const publicPages = [
+    '/home',
+    '/',
+    '/register',
+    '/login',
+    '/categories/all',
+    `/categories/${to.params.id}/products`,
+  ];
+
+  const loggedIn = store.getters['authentication/loggedIn'];
+  if (guestOnlyPages.includes(to.path) && loggedIn) {
+    return next('/');
   }
-}
+
+  const authRequired = !publicPages.includes(to.path);
+
+  if (!authRequired) {
+    return next();
+  }
+
+  const user = store.getters['authentication/user'];
+  const privatePages = [
+    '/logout',
+    '/profile-details',
+    '/profile-edit',
+    '/shopping-cart',
+    '/my-orders',
+  ];
+
+  const adminRequired = !privatePages.includes(to.path);
+  const isAdmin = user && user.isAdministrator;
+
+  if ((!adminRequired && loggedIn) || (adminRequired && isAdmin)) {
+    return next();
+  } else {
+    return next('/');
+  }
+});
 
 export default router;
