@@ -24,7 +24,6 @@
 
 <script>
 import { userService } from '@/services/userService';
-import { store } from '@/store';
 
 export default {
   data() {
@@ -43,7 +42,7 @@ export default {
   methods: {
     async loadData() {
       const { dispatch } = this.$store;
-      const user = store.getters['authentication/user'];
+      const user = this.$store.getters['authentication/user'];
 
       userService
         .getUser(user.id)
@@ -71,23 +70,6 @@ export default {
       e.preventDefault();
 
       this.$router.history.go(-1);
-    },
-    openWidget(e) {
-      e.preventDefault();
-
-      const widget = window.cloudinary.openUploadWidget(
-        {
-          cloudName: 'devpor11z',
-          uploadPreset: 'react-course',
-        },
-        (error, result) => {
-          if (result.event === 'success') {
-            this.imageURL = result.info.url;
-          }
-        }
-      );
-
-      widget.open();
     },
   },
 };

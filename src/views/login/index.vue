@@ -79,12 +79,11 @@ export default {
       }
       this.submitted = true;
 
-      dispatch('alert/success', 'Logged in successfully!');
+      dispatch('authentication/login', { email, password });
 
       setTimeout(() => {
-        dispatch('authentication/login', { email, password });
-        dispatch('alert/clear');
-      }, 2000);
+        this.submitted = false;
+      }, 2500);
     },
   },
   validations: {

@@ -4,6 +4,7 @@ import Home from '../views/home';
 import Login from '../views/login';
 import Register from '../views/register';
 import Logout from '../views/logout';
+import ProductDetails from '../views/products/details';
 import ProductCreate from '../views/products/create';
 import ProductEdit from '../views/products/edit';
 import ProductDelete from '../views/products/delete';
@@ -14,6 +15,8 @@ import CategoryProducts from '../views/categories/products-by-category';
 import ProfileDetails from '../views/profile/profile-details';
 import ProfileEdit from '../views/profile/profile-edit';
 import ManageUsers from '../views/users';
+import ShoppingCart from '../views/orders/shopping-cart';
+import MyOrders from '../views/orders/my-orders';
 import NotFound from '../views/not-found';
 import { store } from '@/store';
 
@@ -45,6 +48,11 @@ const routes = [
   {
     path: '/products/create',
     component: ProductCreate,
+  },
+  {
+    path: '/products/details/:id',
+    name: 'product-details',
+    component: ProductDetails,
   },
   {
     path: '/products/edit/:id',
@@ -87,6 +95,16 @@ const routes = [
     component: ManageUsers
   },
   {
+    path: '/shopping-cart',
+    name: 'shopping-cart',
+    component: ShoppingCart
+  },
+  {
+    path: '/my-orders',
+    name: 'my-orders',
+    component: MyOrders
+  },
+  {
     path: '*',
     component: NotFound,
   },
@@ -107,6 +125,7 @@ router.beforeEach((to, from, next) => {
     '/login',
     '/categories/all',
     `/categories/${to.params.id}/products`,
+    `/products/details/${to.params.id}`,
   ];
 
   const loggedIn = store.getters['authentication/loggedIn'];

@@ -194,23 +194,6 @@ export default {
 
       this.$router.history.go(-1);
     },
-    openWidget(e) {
-      e.preventDefault();
-
-      const widget = window.cloudinary.openUploadWidget(
-        {
-          cloudName: 'devpor11z',
-          uploadPreset: 'react-course',
-        },
-        (error, result) => {
-          if (result.event === 'success') {
-            this.imageURL = result.info.url;
-          }
-        }
-      );
-
-      widget.open();
-    },
   },
 };
 </script>

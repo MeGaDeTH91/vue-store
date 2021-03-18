@@ -22,17 +22,26 @@ export const authentication = {
     login({ dispatch, commit }, { email, password }) {
       userService.login(email, password).then(
         (user) => {
+          dispatch('alert/success', 'Logged in successfully!', { root: true });
+
           setTimeout(() => {
-            commit('loginSuccess', user);
-          }, 5500);
-          setTimeout(() => {
+            dispatch('alert/clear', '', { root: true });
             router.push({ name: 'home' });
             router.go();
-          }, 100);
+          }, 2500);
+
+          setTimeout(() => {
+            commit('loginSuccess', user);
+          }, 2000);
         },
         (error) => {
-          commit('loginFailure', error);
-          dispatch('alert/error', error, { root: true });
+          console.log(error);
+          commit('loginFailure', '');
+          dispatch('alert/error', 'Invalid credentials!', { root: true });
+
+          setTimeout(() => {
+            dispatch('alert/clear', '', { root: true });
+          }, 2500);
         }
       );
     },
@@ -42,18 +51,28 @@ export const authentication = {
     ) {
       userService.register(email, fullName, phone, password, rePassword).then(
         (user) => {
+          dispatch('alert/success', 'User registered successfully!', {
+            root: true,
+          });
+
           setTimeout(() => {
+            dispatch('alert/clear', '', { root: true });
             router.push({ name: 'home' });
             router.go();
-          }, 500);
+          }, 2500);
 
           setTimeout(() => {
             commit('loginSuccess', user);
-          }, 100);
+          }, 2000);
         },
         (error) => {
-          commit('loginFailure', error);
-          dispatch('alert/error', error, { root: true });
+          console.log(error);
+          commit('loginFailure', '');
+          dispatch('alert/error', 'Try another email.', { root: true });
+
+          setTimeout(() => {
+            dispatch('alert/clear', '', { root: true });
+          }, 2500);
         }
       );
     },
@@ -61,9 +80,21 @@ export const authentication = {
       userService.logout();
       setTimeout(() => {
         commit('logout');
-      }, 300);
-      router.push({ name: 'home' });
-      router.go();
+      }, 2000);
+
+      setTimeout(() => {
+        router.push({ name: 'home' }).catch(err => {
+          // Ignore the vuex err regarding  navigating to the page they are already on.
+          if (
+            err.name !== 'NavigationDuplicated' &&
+            !err.message.includes('Avoided redundant navigation to current location')
+          ) {
+            // But print any other errors to the console
+            console.log(err);
+          }
+        });
+        router.go();
+      }, 2500);
     },
   },
   mutations: {

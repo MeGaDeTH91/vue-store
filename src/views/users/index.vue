@@ -142,23 +142,6 @@ export default {
     getUserPhone(user) {
       return user.phone ? user.phone : 'Not provided';
     },
-    openWidget(e) {
-      e.preventDefault();
-
-      const widget = window.cloudinary.openUploadWidget(
-        {
-          cloudName: 'devpor11z',
-          uploadPreset: 'react-course',
-        },
-        (error, result) => {
-          if (result.event === 'success') {
-            this.imageURL = result.info.url;
-          }
-        }
-      );
-
-      widget.open();
-    },
   },
 };
 </script>
