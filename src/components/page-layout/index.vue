@@ -2,7 +2,7 @@
   <div class="container">
     <header>
       <article class="header-logo">
-        <router-link class="nav-link header-logo" to="/">Vue-Store</router-link>
+        <router-link class="nav-link header-logo" to="/"><span class="logo-color">Vue-</span>Store</router-link>
       </article>
       <article class="header-right">
         <ul class="nav-links">
@@ -66,6 +66,11 @@ header {
   overflow: hidden;
   padding: 30px 10px;
   margin: 30px 40px;
+}
+
+.logo-color {
+  font-size: 31px;
+  color: rgb(119, 153, 113);
 }
 
 header a {

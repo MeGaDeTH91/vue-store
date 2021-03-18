@@ -1,6 +1,6 @@
 <template>
   <div class="form-container">
-    <h1>Register</h1>
+    <h1>Update profile info</h1>
     <div v-if="submitted" class="ispinner white large animating">
       <div class="ispinner-blade"></div>
       <div class="ispinner-blade"></div>
@@ -20,10 +20,11 @@
         <label for="email"
           >Email:
           <input
+            disabled
             type="email"
             v-model="email"
             name="email"
-            class="form-control"
+            class="form-control email-input"
           />
         </label>
       </div>
@@ -49,60 +50,71 @@
           />
         </label>
       </div>
-      <div class="form-group">
-        <label htmlFor="password"
-          >Password:
-          <input
-            type="password"
-            v-model="password"
-            name="password"
-            class="form-control"
-            autocomplete="on"
-          />
-        </label>
-      </div>
-      <div class="form-group">
-        <label htmlFor="rePassword"
-          >Re-Password:
-          <input
-            type="password"
-            v-model="rePassword"
-            name="rePassword"
-            class="form-control"
-            autocomplete="on"
-          />
-        </label>
-      </div>
       <div class="form-button">
-        <button class="btn-primary">Register</button>
+        <button class="btn-primary">Update info</button>
+        <button class="go-back-btn" @click="goBack">Go Back</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import {
-  required,
-  minLength,
-  maxLength,
-  email,
-} from 'vuelidate/lib/validators';
+import { userService } from '@/services/userService';
+import { store } from '@/store';
+import router from '@/router';
+import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
 export default {
   data() {
     return {
+      userId: '',
       email: '',
       fullName: '',
       phone: '',
-      password: '',
-      rePassword: '',
       submitted: false,
     };
   },
+  created() {
+    this.loadData();
+  },
   methods: {
+    async loadData() {
+      const { dispatch } = this.$store;
+      const user = store.getters['authentication/user'];
+
+      userService
+        .getUser(user.id)
+        .then((response) => {
+          let user = response.data;
+
+          this.userId = user._id;
+          this.email = user.email;
+          this.fullName = user.fullName;
+          this.phone = user.phone;
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+          dispatch(
+            'alert/error',
+            'There is a problem with database, please try again later.'
+          );
+
+          setTimeout(() => {
+            dispatch('alert/clear');
+            this.submitted = false;
+          }, 10000);
+          return;
+        });
+    },
+    goBack(e) {
+      e.preventDefault();
+
+      this.$router.history.go(-1);
+    },
+
     handleSubmit(e) {
       e.preventDefault();
-      const { email, fullName, phone, password, rePassword } = this;
+      const { userId, fullName, phone } = this;
       const { dispatch } = this.$store;
 
       this.$v.$touch();
@@ -120,39 +132,34 @@ export default {
 
       dispatch('alert/success', 'User registered successfully!');
 
-      setTimeout(() => {
-        dispatch('authentication/register', {
-          email,
-          fullName,
-          phone,
-          password,
-          rePassword,
+      userService
+        .editUser(userId, fullName, phone)
+        .then(() => {
+          dispatch('alert/success', 'User info updated successfully!');
+
+          setTimeout(() => {
+            router.push('/profile-details');
+            router.go();
+          }, 500);
+        })
+        .catch((err) => {
+          dispatch('alert/error', err.response.data);
+
+          setTimeout(() => {
+            dispatch('alert/clear');
+            this.submitted = false;
+          }, 4000);
+          return;
         });
-        dispatch('alert/clear');
-      }, 2000);
     },
   },
   validations: {
-    email: {
-      required,
-      email,
-    },
     fullName: {
       required,
       minLength: minLength(3),
     },
     phone: {
       maxLength: maxLength(50),
-    },
-    password: {
-      required,
-      minLength: minLength(5),
-      maxLength: maxLength(40),
-    },
-    rePassword: {
-      required,
-      minLength: minLength(5),
-      maxLength: maxLength(40),
     },
   },
 };
@@ -187,6 +194,10 @@ label {
   display: flex;
   justify-content: flex-end;
   margin-top: 60px;
+}
+
+.email-input {
+  color: white;
 }
 
 .btn-primary {

@@ -1,7 +1,7 @@
-import { userService } from "../services/userService";
-import router from "../router";
+import { userService } from '../services/userService';
+import router from '../router';
 
-const cookie = JSON.parse(localStorage.getItem("access-token"));
+const cookie = JSON.parse(localStorage.getItem('access-token'));
 
 const initialState = cookie
   ? { status: { loggedIn: true }, user: cookie.data.user }
@@ -23,16 +23,16 @@ export const authentication = {
       userService.login(email, password).then(
         (user) => {
           setTimeout(() => {
-            commit("loginSuccess", user);
+            commit('loginSuccess', user);
           }, 5500);
           setTimeout(() => {
-            router.push("/");
+            router.push({ name: 'home' });
             router.go();
           }, 100);
         },
         (error) => {
-          commit("loginFailure", error);
-          dispatch("alert/error", error, { root: true });
+          commit('loginFailure', error);
+          dispatch('alert/error', error, { root: true });
         }
       );
     },
@@ -43,26 +43,26 @@ export const authentication = {
       userService.register(email, fullName, phone, password, rePassword).then(
         (user) => {
           setTimeout(() => {
-            router.push("/");
+            router.push({ name: 'home' });
             router.go();
           }, 500);
 
           setTimeout(() => {
-            commit("loginSuccess", user);
+            commit('loginSuccess', user);
           }, 100);
         },
         (error) => {
-          commit("loginFailure", error);
-          dispatch("alert/error", error, { root: true });
+          commit('loginFailure', error);
+          dispatch('alert/error', error, { root: true });
         }
       );
     },
     logout({ commit }) {
       userService.logout();
       setTimeout(() => {
-        commit("logout");
+        commit('logout');
       }, 300);
-      router.push("/");
+      router.push({ name: 'home' });
       router.go();
     },
   },
