@@ -1,5 +1,5 @@
 <template>
-  <div class="product-container">
+  <div v-if="this.products && this.products.length" class="product-container">
     <h1>Products</h1>
     <div class="product-row">
       <div class="product-deck">
@@ -43,6 +43,9 @@
     </div>
 
     <br />
+  </div>
+  <div v-else class="product-container">
+    <h1>Database is under maintenance, please try again later.</h1>
   </div>
 </template>
 

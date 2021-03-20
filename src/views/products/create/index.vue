@@ -92,6 +92,7 @@
             :reduce="(category) => category._id"
             v-model="category"
             label="title"
+            data-cy='select-input'
           ></v-select>
         </label>
       </div>
