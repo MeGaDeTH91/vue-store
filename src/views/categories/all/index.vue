@@ -1,5 +1,5 @@
 <template>
-  <div class="category-container">
+  <div v-if="this.categories && this.categories.length" class="category-container">
     <h1>Categories</h1>
     <div class="category-row">
       <div class="category-deck">
@@ -32,6 +32,9 @@
     </div>
 
     <br />
+  </div>
+  <div v-else class="category-container">
+    <h1>Database is under maintenance, please try again later.</h1>
   </div>
 </template>
 

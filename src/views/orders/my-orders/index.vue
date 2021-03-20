@@ -1,5 +1,6 @@
 <template>
   <div class="orders-container" v-if="this.orders">
+    <h1 class="orders-title">Order history</h1>
     <article
       class="order-item"
       v-for="(order, index) in this.orders"

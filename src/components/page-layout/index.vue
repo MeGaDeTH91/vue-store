@@ -2,9 +2,11 @@
   <div class="container">
     <header>
       <article class="header-logo">
-        <router-link class="nav-link header-logo" to="/"><span class="logo-color">Vue-</span>Store</router-link>
+        <router-link class="nav-link header-logo" to="/"
+          ><span class="logo-color">Vue-</span>Store</router-link
+        >
       </article>
-      <article class="header-right">
+      <nav class="header-right">
         <ul class="nav-links">
           <li v-for="(route, index) in this.getRoutes" :key="index">
             <router-link class="nav-link" :to="route.link">{{
@@ -12,7 +14,7 @@
             }}</router-link>
           </li>
         </ul>
-      </article>
+      </nav>
     </header>
     <Popup
       v-if="getAlert.message"
@@ -123,8 +125,11 @@ footer {
 }
 
 @media screen and (max-width: 1200px) {
-  .footer-text {
-    left: 100px;
+  .nav-links {
+    width: 50%;
+  }
+  .nav-links a {
+    font-size: 17px;
   }
 }
 </style>

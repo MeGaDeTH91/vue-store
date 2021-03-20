@@ -80,7 +80,7 @@ export const authentication = {
       userService.logout();
       setTimeout(() => {
         commit('logout');
-      }, 2000);
+      }, 100);
 
       setTimeout(() => {
         router.push({ name: 'home' }).catch(err => {
@@ -94,7 +94,7 @@ export const authentication = {
           }
         });
         router.go();
-      }, 2500);
+      }, 300);
     },
   },
   mutations: {

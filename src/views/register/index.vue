@@ -62,12 +62,12 @@
         </label>
       </div>
       <div class="form-group">
-        <label htmlFor="rePassword"
+        <label htmlFor="re-password"
           >Re-Password:
           <input
             type="password"
             v-model="rePassword"
-            name="rePassword"
+            name="re-password"
             class="form-control"
             autocomplete="on"
           />

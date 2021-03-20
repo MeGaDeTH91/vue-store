@@ -7,7 +7,7 @@ export default {
     setTimeout(() => {
       store.dispatch('authentication/logout');
       store.dispatch('alert/clear');
-    }, 2000);
+    }, 2500);
 
     next(false);
   },
