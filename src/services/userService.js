@@ -10,32 +10,28 @@ export const userService = {
   changeUserStatus,
 };
 
-function login(email, password) {
-  return HTTP.post(`users/login`, { email, password })
-    .then((response) => {
-      localStorage.setItem('access-token', JSON.stringify(response));
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+async function login(email, password) {
+  try {
+    let response = await HTTP.post(`users/login`, { email, password })
+    localStorage.setItem('access-token', JSON.stringify(response));
+
+    return response.data.user;
+  } catch (error) {
+    console.log(error)
+    throw new Error('Invalid credentials!');
+  }
 }
 
-function register(email, fullName, phone, password, rePassword) {
-  return HTTP.post(`users/register`, {
+async function register(email, fullName, phone, password, rePassword) {
+  await HTTP.post(`users/register`, {
     email,
     fullName,
     phone,
     password,
     rePassword,
-  })
-    .then((response) => {
-      login(email, password);
+  });
 
-      return response;
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+  return await login(email, password);
 }
 
 function logout() {

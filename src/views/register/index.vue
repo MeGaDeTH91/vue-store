@@ -116,20 +116,29 @@ export default {
         return;
       }
 
+      if (password !== rePassword) {
+        dispatch('alert/error', 'Passwords do not match.');
+
+        setTimeout(() => {
+          dispatch('alert/clear');
+        }, 4000);
+
+        return;
+      }
+
       this.submitted = true;
 
-      dispatch('alert/success', 'User registered successfully!');
+      dispatch('authentication/register', {
+        email,
+        fullName,
+        phone,
+        password,
+        rePassword,
+      });
 
       setTimeout(() => {
-        dispatch('authentication/register', {
-          email,
-          fullName,
-          phone,
-          password,
-          rePassword,
-        });
-        dispatch('alert/clear');
-      }, 2000);
+        this.submitted = false;
+      }, 2500);
     },
   },
   validations: {
@@ -146,12 +155,12 @@ export default {
     },
     password: {
       required,
-      minLength: minLength(5),
+      minLength: minLength(3),
       maxLength: maxLength(40),
     },
     rePassword: {
       required,
-      minLength: minLength(5),
+      minLength: minLength(3),
       maxLength: maxLength(40),
     },
   },

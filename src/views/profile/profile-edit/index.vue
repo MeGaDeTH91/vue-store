@@ -60,7 +60,6 @@
 
 <script>
 import { userService } from '@/services/userService';
-import { store } from '@/store';
 import router from '@/router';
 import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
@@ -80,7 +79,7 @@ export default {
   methods: {
     async loadData() {
       const { dispatch } = this.$store;
-      const user = store.getters['authentication/user'];
+      const user = this.$store.getters['authentication/user'];
 
       userService
         .getUser(user.id)

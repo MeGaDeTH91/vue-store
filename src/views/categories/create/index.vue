@@ -99,7 +99,7 @@ export default {
           setTimeout(() => {
             router.push('/categories/all');
             router.go();
-          }, 500);
+          }, 2500);
         })
         .catch((err) => {
           dispatch('alert/error', err.response.data);

@@ -184,7 +184,7 @@ export default {
           setTimeout(() => {
             router.push('/');
             router.go();
-          }, 500);
+          }, 1000);
         })
         .catch((err) => {
           dispatch('alert/error', err.response.data);
