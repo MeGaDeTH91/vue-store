@@ -36,7 +36,7 @@ Cypress is used for more complex End-to-End testing with > 85% functionality cov
 The application is hosted on [Heroku](https://www.heroku.com) and can be found on the following link:<br>
 [https://vue-store-front-end.herokuapp.com/](https://vue-store-front-end.herokuapp.com/) <br>
 The REST API is hosted also on [Heroku](https://www.heroku.com) and can be found on the following link:<br>
-[https://vue-store-rest.herokuapp.com/](https://vue-store-rest.herokuapp.com/)
+[https://vue-store-rest.herokuapp.com/api/*](https://vue-store-rest.herokuapp.com/api/*)
 
 ### <i>Table of contents: </i><br>
 
