@@ -22,7 +22,7 @@ PRIVATE_KEY={your private key}<br>
 Then navigate to the folder with command prompt, powershell or
 any other suitable command-line and execute 'npm install'.then('npm start').catch(check your internet connection :) ). This will start the REST API on
 [http://localhost:{port}](http://localhost:{port})
-Next, in the project root folder, in separate command-line window run the same 'npm install' and 'npm start' command and
+Next, in the project root folder, in separate command-line window run the same 'npm install' and 'npm run serve' command and
 this will start the Vue app on
 After that, it is up to you :)
 
@@ -36,7 +36,7 @@ Cypress is used for more complex End-to-End testing with > 85% functionality cov
 The application is hosted on [Heroku](https://www.heroku.com) and can be found on the following link:<br>
 [https://vue-store-front-end.herokuapp.com/](https://vue-store-front-end.herokuapp.com/) <br>
 The REST API is hosted also on [Heroku](https://www.heroku.com) and can be found on the following link:<br>
-[https://vue-rest-api.herokuapp.com/](https://vue-rest-api.herokuapp.com/)
+[https://vue-store-rest.herokuapp.com/](https://vue-store-rest.herokuapp.com/)
 
 ### <i>Table of contents: </i><br>
 
